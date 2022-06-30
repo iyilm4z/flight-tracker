@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FlightTracker.Csv.Import;
+namespace FlightTracker.Csv.Read;
 
 public interface IFlightTrackerCsvReader
 {

@@ -2,7 +2,8 @@
 {
     public enum FlightStatus
     {
-        None,
+        Unknown,
+        NotReported,
         New,
         Discontinued
     }

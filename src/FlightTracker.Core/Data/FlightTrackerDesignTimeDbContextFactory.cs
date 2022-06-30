@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace FlightTracker.Data
 {
@@ -8,10 +9,22 @@ namespace FlightTracker.Data
     {
         public FlightTrackerDbContext CreateDbContext(string[] args)
         {
+            var configuration = GetConfiguration();
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
             var optionsBuilder = new DbContextOptionsBuilder<FlightTrackerDbContext>();
-            optionsBuilder.UseSqlite("Filename=App_Data\\db\\flight-tracker.db");
+            optionsBuilder.UseSqlite(connectionString);
 
             return new FlightTrackerDbContext(optionsBuilder.Options);
+        }
+
+        private static IConfigurationRoot GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(FlightTrackerPaths.RootPath)
+                .AddJsonFile("appsettings.json");
+
+            return builder.Build();
         }
     }
 }

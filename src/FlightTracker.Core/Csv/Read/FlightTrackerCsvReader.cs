@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 
-namespace FlightTracker.Csv.Import
+namespace FlightTracker.Csv.Read
 {
     public class FlightTrackerCsvReader : IFlightTrackerCsvReader
     {

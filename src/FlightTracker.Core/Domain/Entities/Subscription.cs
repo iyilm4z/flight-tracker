@@ -1,6 +1,6 @@
 ﻿namespace FlightTracker.Domain.Entities
 {
-    public class Subscription
+    public class Subscription : IEntity
     {
         public int AgencyId { get; set; }
 

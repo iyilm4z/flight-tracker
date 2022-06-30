@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using FlightTracker.Application.Dto;
-using FlightTracker.Csv.Import;
+using FlightTracker.Csv.Read;
 
 namespace FlightTracker.Csv.Export;
 
@@ -14,11 +14,12 @@ public class FlightTrackerExporter : IFlightTrackerExporter
 
         var sb = new StringBuilder();
 
-        // write headers
+        // write header
         sb.AppendLine($"{FlightCsvModel.FlightIdName},{RouteCsvModel.OriginCityIdName}," +
                       $"{RouteCsvModel.DestinationCityIdName},{FlightCsvModel.DepartureTimeName}," +
                       $"{FlightCsvModel.ArrivalTimeName},{FlightCsvModel.AirlineIdName},status");
 
+        // write body
         foreach (var flight in flights)
         {
             sb.AppendLine($"{flight.FlightId},{flight.OriginCityId}," +

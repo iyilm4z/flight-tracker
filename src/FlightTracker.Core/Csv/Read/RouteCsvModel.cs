@@ -1,7 +1,7 @@
 ﻿using System;
 using CsvHelper.Configuration.Attributes;
 
-namespace FlightTracker.Csv.Import
+namespace FlightTracker.Csv.Read
 {
     public class RouteCsvModel
     {

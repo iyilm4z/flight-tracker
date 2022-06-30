@@ -1,4 +1,4 @@
-﻿using FlightTracker.Csv.Import;
+﻿using FlightTracker.Csv.Read;
 
 namespace FlightTracker.Data.Seed
 {

@@ -5,7 +5,7 @@ namespace FlightTracker
 {
     public static class FlightTrackerPaths
     {
-        private static readonly string RootPath = Directory.GetCurrentDirectory();
+        public static readonly string RootPath = Directory.GetCurrentDirectory();
 
         public static string Log => Path.Combine(RootPath, "flight-tracker.log");
 

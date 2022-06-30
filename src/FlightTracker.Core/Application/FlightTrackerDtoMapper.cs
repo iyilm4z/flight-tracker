@@ -7,45 +7,67 @@ namespace FlightTracker.Application;
 
 internal static class FlightTrackerDtoMapper
 {
-    public static List<FlightDto> MapToFlightDto(this List<Flight> sourceFlights, List<Flight> allFlights)
+    public static List<FlightDto> MapToFlightDto(this IEnumerable<Flight> sourceFlights, IEnumerable<Flight> oldFlights)
     {
-        var allFlightsByAirlineId = allFlights.GroupBy(x => x.AirlineId)
-            .Select(grp => new
-            {
-                AirlineId = grp.Key,
-                Flights = grp.ToList()
-            })
-            .ToList();
+        var sourceFlightsByAirlineIdDictionary = sourceFlights
+            .GroupBy(x => x.AirlineId)
+            .ToDictionary(grp => grp.Key, grp => grp.ToList());
+
+        var oldFlightsByAirlineIdDictionary = oldFlights
+            .GroupBy(x => x.AirlineId)
+            .ToDictionary(grp => grp.Key, grp => grp.ToList());
 
         var result = new List<FlightDto>();
 
-        foreach (var sourceFlight in sourceFlights)
-        {
-            var flightsByAirlineId = allFlightsByAirlineId.FirstOrDefault(x => x.AirlineId == sourceFlight.AirlineId);
+        BindNewFlights(result, sourceFlightsByAirlineIdDictionary, oldFlightsByAirlineIdDictionary);
 
-            var flightDto = new FlightDto
-            {
-                FlightId = sourceFlight.Id,
-                OriginCityId = sourceFlight.Route.OriginCityId,
-                DestinationCityId = sourceFlight.Route.DestinationCityId,
-                DepartureTime = sourceFlight.DepartureTime,
-                ArrivalTime = sourceFlight.ArrivalTime,
-                AirlineId = sourceFlight.AirlineId
-            };
-
-            if (FlightStatusHelper.IsNewFlight(flightsByAirlineId.Flights, sourceFlight))
-            {
-                flightDto.Status = FlightStatus.New;
-            }
-
-            if (FlightStatusHelper.IsDiscontinuedFlight(flightsByAirlineId.Flights, sourceFlight))
-            {
-                flightDto.Status = FlightStatus.Discontinued;
-            }
-
-            result.Add(flightDto);
-        }
+        BindDiscontinuedFlights(result, sourceFlightsByAirlineIdDictionary, oldFlightsByAirlineIdDictionary);
 
         return result;
+    }
+
+    private static void BindNewFlights(List<FlightDto> result,
+        IReadOnlyDictionary<int, List<Flight>> sourceFlightsByAirlineIdDictionary,
+        IReadOnlyDictionary<int, List<Flight>> oldFlightsByAirlineIdDictionary)
+    {
+        var newFlights =
+            FlightStatusFilterer.FilterNewFlights(sourceFlightsByAirlineIdDictionary,
+                oldFlightsByAirlineIdDictionary);
+
+        var flightDtos = newFlights.Select(flight => new FlightDto
+        {
+            FlightId = flight.Id,
+            OriginCityId = flight.Route.OriginCityId,
+            DestinationCityId = flight.Route.DestinationCityId,
+            AirlineId = flight.AirlineId,
+            Status = FlightStatus.New,
+            DepartureTime = flight.DepartureTime,
+            ArrivalTime = flight.ArrivalTime
+        });
+
+        result.AddRange(flightDtos);
+    }
+
+    private static void BindDiscontinuedFlights(List<FlightDto> result,
+        IReadOnlyDictionary<int, List<Flight>> sourceFlightsByAirlineIdDictionary,
+        IReadOnlyDictionary<int, List<Flight>> oldFlightsByAirlineIdDictionary)
+    {
+        var discontinuedFlights =
+            FlightStatusFilterer.FilterDiscontinuedFlights(sourceFlightsByAirlineIdDictionary,
+                oldFlightsByAirlineIdDictionary);
+
+        var flightDtos = discontinuedFlights.Select(flight => new FlightDto
+        {
+            FlightId = flight.Id,
+            OriginCityId = flight.Route.OriginCityId,
+            DestinationCityId = flight.Route.DestinationCityId,
+            AirlineId = flight.AirlineId,
+            Status = FlightStatus.Discontinued,
+            // for showing an old flight in matching flights
+            DepartureTime = flight.DepartureTime.AddDays(7),
+            ArrivalTime = flight.ArrivalTime.AddDays(7)
+        });
+
+        result.AddRange(flightDtos);
     }
 }

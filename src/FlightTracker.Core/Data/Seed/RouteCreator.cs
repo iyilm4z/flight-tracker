@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using FlightTracker.Csv.Import;
+using FlightTracker.Csv.Read;
 using FlightTracker.Domain.Entities;
 
 namespace FlightTracker.Data.Seed

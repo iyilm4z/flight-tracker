@@ -37,15 +37,19 @@ namespace FlightTracker.Commands.Detect
 
             var optionsModel = GetValidatedOptionsModel(commandLineArgs.Options);
 
-            var flights = await _flightRepository
-                .GetFlightsAsync(optionsModel.DepartureTime, optionsModel.ArrivalTime, optionsModel.AgencyId);
+            var oneWeekAgoFromStartDate = optionsModel.StartDate.AddDays(-7);
 
-            var flightsByAirlineIds = flights.Select(x => x.AirlineId).Distinct().ToArray();
-
+            // All flights between one week ago from StartDate and EndDate
             var allFlights = await _flightRepository
-                .GetFlightsAsync(optionsModel.DepartureTime, optionsModel.ArrivalTime, flightsByAirlineIds);
+                .GetFlightsAsync(oneWeekAgoFromStartDate, optionsModel.EndDate, optionsModel.AgencyId);
 
-            var flightDtos = flights.MapToFlightDto(allFlights);
+            // The flights until StartDate
+            var oldFlights = allFlights.Where(x => x.DepartureTime < optionsModel.StartDate).ToList();
+
+            // The flights matching between StartDate and EndDate criteria
+            var matchingFlights = allFlights.Where(x => x.DepartureTime >= optionsModel.StartDate).ToList();
+
+            var flightDtos = matchingFlights.MapToFlightDto(oldFlights);
 
             _flightTrackerExporter.ExportFlightsAsCsv(flightDtos);
 

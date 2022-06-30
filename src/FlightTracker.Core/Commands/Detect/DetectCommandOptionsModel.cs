@@ -4,16 +4,16 @@ namespace FlightTracker.Commands.Detect
 {
     public class DetectCommandOptionsModel
     {
-        public DetectCommandOptionsModel(DateTime departureTime, DateTime arrivalTime, int agencyId)
+        public DetectCommandOptionsModel(DateTime startDate, DateTime endDate, int agencyId)
         {
-            DepartureTime = departureTime;
-            ArrivalTime = arrivalTime;
+            StartDate = startDate;
+            EndDate = endDate;
             AgencyId = agencyId;
         }
 
-        public DateTime DepartureTime { get; }
+        public DateTime StartDate { get; }
 
-        public DateTime ArrivalTime { get; }
+        public DateTime EndDate { get; }
 
         public int AgencyId { get; }
     }
