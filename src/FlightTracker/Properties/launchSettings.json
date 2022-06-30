@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "FlightTracker": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "commandLineArgs": "detect -dt 2018-01-01 -at 2018-01-15 -ai 1"
+    }
+  }
+}
