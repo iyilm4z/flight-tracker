@@ -2,16 +2,16 @@
 {
     public static class DetectCommandOptionsOptions
     {
-        public static class DepartureTime
+        public static class StartDate
         {
-            public const string Short = "dt";
-            public const string Long = "departure-time";
+            public const string Short = "sd";
+            public const string Long = "start-date";
         }
 
-        public static class ArrivalTime
+        public static class EndDate
         {
-            public const string Short = "at";
-            public const string Long = "arrival-time";
+            public const string Short = "ed";
+            public const string Long = "end-date";
         }
 
         public static class AgencyId

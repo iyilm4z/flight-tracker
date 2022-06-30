@@ -5,7 +5,7 @@
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },
-      "commandLineArgs": "detect -dt 2018-01-01 -at 2018-01-15 -ai 1"
+      "commandLineArgs": "detect -sd 2018-01-01 -ed 2018-01-15 -ai 1"
     }
   }
 }

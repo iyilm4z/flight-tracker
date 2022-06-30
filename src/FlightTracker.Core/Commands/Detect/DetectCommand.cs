@@ -64,27 +64,27 @@ namespace FlightTracker.Commands.Detect
 
         private DetectCommandOptionsModel GetValidatedOptionsModel(CommandLineOptions options)
         {
-            var departureTimeOption = options.GetOrNull(DetectCommandOptionsOptions.DepartureTime.Short,
-                DetectCommandOptionsOptions.DepartureTime.Long);
+            var startDateOption = options.GetOrNull(DetectCommandOptionsOptions.StartDate.Short,
+                DetectCommandOptionsOptions.StartDate.Long);
 
-            if (string.IsNullOrEmpty(departureTimeOption) ||
-                !DateTime.TryParse(departureTimeOption, out var departureTime))
+            if (string.IsNullOrEmpty(startDateOption) ||
+                !DateTime.TryParse(startDateOption, out var startDate))
             {
                 throw new FlightTrackerUsageException(
-                    "<departure-time> is missing or invalid!" +
+                    $"<{DetectCommandOptionsOptions.StartDate.Long}> is missing or invalid!" +
                     Environment.NewLine + Environment.NewLine +
                     GetUsageInfo()
                 );
             }
 
-            var arrivalTimeOption = options.GetOrNull(DetectCommandOptionsOptions.ArrivalTime.Short,
-                DetectCommandOptionsOptions.ArrivalTime.Long);
+            var endDateOption = options.GetOrNull(DetectCommandOptionsOptions.EndDate.Short,
+                DetectCommandOptionsOptions.EndDate.Long);
 
-            if (string.IsNullOrEmpty(arrivalTimeOption) ||
-                !DateTime.TryParse(arrivalTimeOption, out var arrivalTime))
+            if (string.IsNullOrEmpty(endDateOption) ||
+                !DateTime.TryParse(endDateOption, out var endDate))
             {
                 throw new FlightTrackerUsageException(
-                    "<arrival-time> is missing or invalid!" +
+                    $"<{DetectCommandOptionsOptions.EndDate.Long}> is missing or invalid!" +
                     Environment.NewLine + Environment.NewLine +
                     GetUsageInfo()
                 );
@@ -97,13 +97,13 @@ namespace FlightTracker.Commands.Detect
                 !int.TryParse(agencyIdOption, out var agencyId))
             {
                 throw new FlightTrackerUsageException(
-                    "<agency-id> is missing or invalid!" +
+                    $"<{DetectCommandOptionsOptions.AgencyId.Long}> is missing or invalid!" +
                     Environment.NewLine + Environment.NewLine +
                     GetUsageInfo()
                 );
             }
 
-            return new DetectCommandOptionsModel(departureTime, arrivalTime, agencyId);
+            return new DetectCommandOptionsModel(startDate, endDate, agencyId);
         }
 
         public string GetUsageInfo()
@@ -112,11 +112,17 @@ namespace FlightTracker.Commands.Detect
 
             sb.AppendLine("");
             sb.AppendLine("Usage:");
-            sb.AppendLine($"  flight-tracker {Name} -dt <departure-time> -at <arrival-time> -ai <agency-id>");
+            sb.AppendLine($"  flight-tracker {Name} " +
+                          $"-{DetectCommandOptionsOptions.StartDate.Short} <{DetectCommandOptionsOptions.StartDate.Long}> " +
+                          $"-{DetectCommandOptionsOptions.EndDate.Short} <{DetectCommandOptionsOptions.EndDate.Long}> " +
+                          $"-{DetectCommandOptionsOptions.AgencyId.Short} <{DetectCommandOptionsOptions.AgencyId.Long}>");
             sb.AppendLine("");
             sb.AppendLine("Example:");
             sb.AppendLine("");
-            sb.AppendLine($"  flight-tracker {Name} -dt 2018-01-01 -at 2018-01-15 -ai 1");
+            sb.AppendLine($"  flight-tracker {Name} " +
+                          $"-{DetectCommandOptionsOptions.StartDate.Short} 2018-01-01 " +
+                          $"-{DetectCommandOptionsOptions.EndDate.Short} 2018-01-15 " +
+                          $"-{DetectCommandOptionsOptions.AgencyId.Short} 1");
 
             return sb.ToString();
         }
